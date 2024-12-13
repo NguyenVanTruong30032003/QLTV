@@ -52,7 +52,7 @@
                         
                           
                             <a class="btn btn-danger btn-sm btn-delete-borrow" data-id="{{ $brr->Id }}" title="Xóa phiếu">
-                                  <i class="fa fa-trash"></i> <!-- FontAwesome icon xóa -->
+                                  <i class="fa fa-trash"></i> 
                             </a>
 
                         </td>
