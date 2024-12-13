@@ -13,14 +13,14 @@ class CategoryController extends Controller
     {
         $search = $request->input('search');
     
-        // Nếu có từ khóa tìm kiếm, lọc theo tên. Nếu không, lấy tất cả thể loại.
+        
         $categories = Category::when($search, function ($query, $search) {
             return $query->where('Name', 'like', '%' . $search . '%');
         })->get();
     
         return view('admin.pages.Category.index', [
             'categories' => $categories,
-            'search' => $search, // Truyền giá trị tìm kiếm về view để hiển thị lại trong input
+            'search' => $search, 
         ]);
     }
     
@@ -40,7 +40,7 @@ class CategoryController extends Controller
     {
         $inputData = [
             'Name' => $request->Name ?? 'trường', // Đảm bảo trường lấy từ form là 'Name'
-            'About' => $request->About ?? 'tú lon', // Trường lấy từ form là 'About'
+            'About' => $request->About ?? 'Nguyen van truong', 
             'Create_date' => now(), // Đảm bảo đúng format ngày giờ
             'Create_by' => $request->Create_by ?? 'tú lon',
             'Update_date' => now(),
@@ -48,7 +48,7 @@ class CategoryController extends Controller
             'IsActive' => $request->has('IsActive') ? 1 : 0,
         ];
     
-        // Lưu dữ liệu vào bảng
+        
         $category = Category::create($inputData);
     
         return redirect()->route('show.categories')->with('success', 'Thêm thể loại thành công!');
