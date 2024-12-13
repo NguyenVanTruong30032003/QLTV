@@ -14,7 +14,7 @@ class BookController extends Controller
     {
         $search = $request->get('search');
         
-        // Lấy tất cả sách, có thể áp dụng tìm kiếm nếu có
+        
         $books = Book::with(['Category', 'Publisher'])
                      ->when($search, function ($query) use ($search) {
                          return $query->where('Name', 'like', '%' . $search . '%')

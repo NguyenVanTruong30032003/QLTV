@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
-
+use App\Models\Category;
+use App\Models\Borrow;
+use App\Models\Borrow_detail;
 class UserController extends Controller
 {
     /**
@@ -238,13 +240,75 @@ class UserController extends Controller
     }
 
 
-    public function show_imfomation($id)
+    public function show_imfomation()
     {
-        // Lấy thông tin người dùng theo ID
-        $user = User::findOrFail($id);
-    
-        // Trả về view hiển thị thông tin người dùng
-        return view('Site.User.User_imformation', compact('user'));
+        $categories = Category::all();
+        return view('Site.User.User_imformation', [
+            'categories' => $categories,
+            
+        ]);
     }
     
+    public function borrow_wait_user()
+    {
+        $user = Auth::user()->Id;
+        $br = Borrow::where('Borrow_user_id', $user)->where('Status',  1)->get();
+        $categories = Category::all();
+        return view('Site.User.borrow_wait', [
+            'categories' => $categories,
+            'br' => $br
+        ]);
+    }
+
+    public function book_wait(String $id)
+    {
+       
+        $br = Borrow_detail::with('book')->where('Borrow_id', $id)->get();
+        $categories = Category::all();
+        return view('Site.User.Book_in_borrow_wait', [
+            'br' => $br,
+            'categories' => $categories
+        ]);
+    }
+
+
+    //admin
+    public function book_wait_admin(String $id)
+    {
+        // dd($id);
+        $br = Borrow_detail::with('book')->where('Borrow_id', $id)->get();
+
+        return view('admin.pages.Borrow.', ['br' => $br]);
+    }
+
+    public function list_borrow_wait()
+    {
+        $user = Auth::user()->Id;
+        // dd($user);
+        $br = Borrow::where('Borrow_user_id', $user)->where('Status',  1)->get();
+        // dd($br);
+        return view('admin.pages.Borrow.waiting_', ['br' => $br]);
+    }
+
+    public function list_borrowing()
+    {
+      
+        $br = Borrow::where('Status', 2)->get();
+       
+        //  dd($br);
+       return view('admin.pages.Borrow.waiting_borrow', ['br' => $br]);
+    }
+
+    public function book_in_wait(String $id)
+    {
+        $br_ok = Borrow::find($id);
+        $br = Borrow_detail::with('book')->where('Borrow_id', $id)->get();
+    
+        // Lấy thông tin người dùng từ Borrow_user_id
+        $student = User::find($br_ok->Borrow_user_id);  // Giả sử Borrow_user_id lưu trữ ID người dùng
+    
+        return view('admin.pages.Borrow.detail_wating_borrow', ['br' => $br, 'br_ok' => $br_ok, 'student' => $student]);
+    }
+    
+   
 }

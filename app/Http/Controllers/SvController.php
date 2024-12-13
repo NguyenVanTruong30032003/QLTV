@@ -28,7 +28,7 @@ class SvController extends Controller
     public function list_book()
     {
         // Lấy tất cả sách
-        $books = Book::simplePaginate(12); // Đảm bảo có dấu ngoặc đơn () để gọi phương thức
+        $books = Book::all(); // Đảm bảo có dấu ngoặc đơn () để gọi phương thức
         $menus = Menu::all();
         $categories = Category::all(); // Cũng cần dấu ngoặc đơn ()
     
