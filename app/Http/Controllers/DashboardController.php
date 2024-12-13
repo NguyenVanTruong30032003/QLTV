@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Category;
 
 class DashboardController extends Controller
 {
@@ -18,13 +17,9 @@ class DashboardController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function master_site()
+    public function create()
     {
-        $categories = Category::all();
-        return view('master_site', [
-            'categories' => $categories,
-            
-        ]);
+        //
     }
 
     /**

@@ -14,6 +14,9 @@ class Borrow extends Model
     {
         return $this->hasMany(Borrow_detail::class, 'Borrow_id');
     }
+   
+
+    
     public function book()
     {
         return $this->belongsTo(Book::class);
