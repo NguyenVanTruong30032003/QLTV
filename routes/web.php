@@ -17,8 +17,13 @@ use App\Http\Controllers\ContactController;
 // });
 
 Route::get('/', [SvController::class, 'index'])->name('Trang_chu');
+Route::get('/master_site', [DashboardController::class, 'master_site']);
 
-Route::get('/user/{id}', [UserController::class, 'show_imfomation'])->name('user.show');
+Route::get('/user_if', [UserController::class, 'show_imfomation'])->name('imfomation');
+Route::get('/borrow_wait', [UserController::class, 'borrow_wait_user'])->name('br_wait');
+Route::get('/borrow_wait_book/{id}', [UserController::class, 'book_wait'])->name('br_wait_book_In');
+Route::get('/book_wait_borrow/{Id}', [UserController::class, 'book_wait'])->name('book_wait_br');
+
 
 Route::get('/register', [UserController::class, 'create'])->name('register_user');
 //Route::get('/register', [UserController::class, 'store'])->name('create_user');
@@ -26,6 +31,8 @@ Route::post('/register', [UserController::class, 'store'])->name('create_user');
 Route::get('/log_out', [UserController::class, 'handleLogout'])->name('log_out');
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/check-login', [UserController::class, 'checkLogin'])->name('check_login');
+
+Route::delete('/admin/delete_borrow/{id}', [BorrowController::class, 'deleteBorrow'])->name('borrow.delete');
 
 Route::get('/chitietbooks/{id}', [BookController::class, 'showchitiet'])->name('showchitiet');
 Route::get('/show_books', [BookController::class, 'index'])->name('show.books.user');
@@ -43,6 +50,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 
 Route::get('/book_in_categories/{id}', [SvController::class, 'showlistBookByCategory'])->name('show_book_in_category');
+
 Route::prefix('admin')->middleware(CheckLogin::class)->group(function () {
     
 //category user
@@ -92,5 +100,10 @@ Route::get('/admin', [DashboardController::class, 'index'])->name('quanlytv');
     Route::post('/user_role/{Id}', [UserController::class, 'roleuser'])->name('role_user');
 
     Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
+
+    //mượn
+    Route::get('/list_borrowing', [UserController::class, 'list_borrowing'])->name('borrowing2');
+    Route::get('/book_wait_borrow/{Id}', [UserController::class, 'book_in_wait'])->name('book_in_wait');
+ 
 
 });

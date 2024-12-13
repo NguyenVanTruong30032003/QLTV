@@ -74,7 +74,7 @@
             
             <li><a href="#"><span class="icon_bag_alt"></span>
 				<div class="tip">
-					{{ session('br') ? count(session('br')) : 0 }} <!-- Hiển thị số lượng sản phẩm trong giỏ -->
+					{{ session('br') ? count(session('br')) : 0 }} 
 				</div> 
 			</a></li>
 			
@@ -127,7 +127,7 @@
                 <div class="header__right">
                     <div class="header__right__auth">
                         @if(Auth::check())  <!-- Kiểm tra xem người dùng đã đăng nhập hay chưa -->
-                        <a href="">{{ Auth::user()->Full_name }}</a> <!-- Hiển thị tên người dùng -->
+                        <a href="{{route('imfomation')}}"  >{{ Auth::user()->Full_name }}</a> 
                             <a href="{{ route('login') }}">Đăng Xuất</a>  <!-- Liên kết đăng nhập -->
                         @else
                             <a href="{{ route('login') }}">Đăng Nhập</a>  <!-- Liên kết đăng nhập -->

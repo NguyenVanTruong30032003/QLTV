@@ -109,7 +109,7 @@ class BorrowController extends Controller
 
     public function store(Request $request)
     {
-        $borrow = session()->get('borrow', []);
+       
         
     
         $br = new Borrow();
@@ -121,7 +121,7 @@ class BorrowController extends Controller
         $br->save();
     
         $br_id = $br->Id;
-    
+        $borrow = session()->get('br', []);
         foreach ($borrow as $book_id => $book) {
             $br_detail = new Borrow_detail();
             $br_detail->Borrow_id = $br_id; // ID phiếu mượn
@@ -169,4 +169,15 @@ class BorrowController extends Controller
     {
         //
     }
+    // xoá trong phiếu mượn
+    public function deleteBorrow($id)
+{
+    $borrow = Borrow::find($id);
+    if ($borrow) {
+        $borrow->delete();
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+}
+
 }
