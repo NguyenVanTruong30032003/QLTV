@@ -50,12 +50,9 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 
 Route::get('/book_in_categories/{id}', [SvController::class, 'showlistBookByCategory'])->name('show_book_in_category');
+Route::get('/list_borrowing', [BorrowController::class, 'list_borrowing'])->name('list_borrowing');
 
 Route::prefix('admin')->middleware(CheckLogin::class)->group(function () {
-    
-//category user
-
-   
 Route::get('/admin', [DashboardController::class, 'index'])->name('quanlytv');
 
     // Category Routes
@@ -102,8 +99,20 @@ Route::get('/admin', [DashboardController::class, 'index'])->name('quanlytv');
     Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
 
     //mượn
-    Route::get('/list_borrowing', [UserController::class, 'list_borrowing'])->name('borrowing2');
     Route::get('/book_wait_borrow/{Id}', [UserController::class, 'book_in_wait'])->name('book_in_wait');
- 
+    Route::get('/list_borrowing', [BorrowController::class, 'Borrowing'])->name('borrowing');
+    Route::get('/check_book_wait_borrow/{Id}', [BorrowController::class, 'get_return'])->name('check_borrow');
+    
+    Route::post('confirm.borrow/{id}', [BorrowController::class, 'confirmBorrow'])->name('confirm.borrow');
+    Route::get('/detail_return/{Id}', [BorrowController::class, 'detail_return'])->name('detail_return');
+    Route::get('/returned_borrows', [BorrowController::class, 'listReturned'])->name('borrows.returned');
+    Route::get('/borrow_details/{id}', [BorrowController::class, 'showDetails'])->name('borrow.details');
+    Route::get('/borrow_deleted', [BorrowController::class, 'borrow_deleted'])->name('borrow.delete');
+    Route::get('/borrow/{id}/deleted', [BorrowController::class, 'borrow_deleted_detail'])->name('borrow.deleted.detail');
+    Route::post('confirm.return/{id}', [BorrowController::class, 'confirmReturn'])->name('confirm.return');
+    Route::post('/book/update-status', [BookController::class, 'updateBookStatus'])->name('book.updateStatus');
 
+
+    Route::get('/book-stats', [BookController::class, 'statistics'])->name('book.statistics');
+    Route::get('/statistic', [BookController::class, 'getStatistics']);    
 });

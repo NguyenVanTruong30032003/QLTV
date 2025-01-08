@@ -1,12 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\Borrow;
+use App\Models\Borrow_detail;
+use Illuminate\Support\Facades\DB;
+
 
 class BookController extends Controller
 {
@@ -131,10 +135,9 @@ class BookController extends Controller
     
     public function showchitiet($id)
 {
-    // Lấy thông tin sách với thông tin liên quan đến nhà xuất bản và thể loại
     $book = Book::with('publisher', 'category')->findOrFail($id);
     
-    // Kiểm tra xem sách có tồn tại không, sau đó lấy danh sách thể loại nếu cần
+   
     $categories = Category::all(); // Lấy tất cả thể loại sách nếu cần hiển thị
     
     // Trả về view và truyền các biến 'book' và 'categories'
@@ -158,7 +161,63 @@ class BookController extends Controller
 
     return view("Site.Category.ShowBookByCategory", compact('books', 'category'));
 }
+public function statistics()
+{
+    // Lấy số liệu thống kê từ bảng borrow
+    $borrow = DB::table('borrow')->where('Status', 1)->count(); // Sách đang mượn
+    $borrowed = DB::table('borrow')->where('Status', 2)->count(); // Sách đã mượn xong
+    $returned = DB::table('borrow')->where('Status', 3)->count(); // Sách đã trả
+    $deleted = DB::table('borrow')->where('Status', 0)->count(); // Sách đã xóa
+    $totalBorrowed = DB::table('borrow')->count(); // Tổng số sách mượn
+
+    // Lấy tất cả thể loại sách nếu cần hiển thị
+    $categories = Category::all(); 
+   //dd(compact('borrow', 'borrowed', 'returned', 'deleted', 'totalBorrowed', 'categories'));
+    // Trả dữ liệu cho view
+    return view('admin.pages.statistics.statistics', [
+        'borrow' => $borrow,
+        'borrowed' => $borrowed,
+        'returned' => $returned,
+        'deleted' => $deleted,
+        'totalBorrowed' => $totalBorrowed,
+        'categories' => $categories
+    ]);
+}
+
+public function getStatsForWeek()
+{
+    $startOfWeek = Carbon::now()->startOfWeek(); // Ngày đầu tuần
+    $endOfWeek = Carbon::now()->endOfWeek(); // Ngày cuối tuần
+
+    // Thống kê các đơn trong tuần theo trạng thái
+    $borrow = Borrow::where('status', 'pending')
+                    ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                    ->count();
+
+    $borrowed = Borrow::where('status', 'borrowed')
+                      ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                      ->count();
+
+    $returned = Borrow::where('status', 'returned')
+                      ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                      ->count();
+
+    $deleted = Borrow::where('status', 'deleted')
+                     ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                     ->count();
+
+    $totalBorrowed = $borrow + $borrowed + $returned + $deleted;
+
+    // Trả lại dữ liệu cho view
+    return view('admin.pages.statistics.statistics', compact('borrow', 'borrowed', 'returned', 'deleted', 'totalBorrowed'));
+}
+
 
 
 }
+
+
+
+
+
 

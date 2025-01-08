@@ -290,14 +290,7 @@ class UserController extends Controller
         return view('admin.pages.Borrow.waiting_', ['br' => $br]);
     }
 
-    public function list_borrowing()
-    {
-      
-        $br = Borrow::where('Status', 2)->get();
-       
-        //  dd($br);
-       return view('admin.pages.Borrow.waiting_borrow', ['br' => $br]);
-    }
+    
 
     public function book_in_wait(String $id)
     {

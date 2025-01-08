@@ -77,6 +77,7 @@
                         </div>
                     </div>
                     <a href="/admin/borrow" class="nav-item nav-link"><i class="bi-cart-fill"></i>Quản Lý Đơn Mượn</a>
+                    <a href="/admin/book-stats" class="nav-item nav-link"><i class="bi-cart-fill"></i>Thống kê</a>
                     
                    
                 </div>
@@ -205,7 +206,8 @@
 
     <!-- Template Javascript -->
     <script src="{{asset("js/main.js")}}"></script>
-
+    <script src="{{asset('lib/chart/chart.min.js')}}"></script> 
+    @stack('scripts')
     
 </body>
 

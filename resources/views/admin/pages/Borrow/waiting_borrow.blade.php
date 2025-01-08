@@ -73,48 +73,50 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('body').on('click', '.btn-delete-borrow', function() {
-            let _id = $(this).data("id");
-            Swal.fire({
-                title: "Xóa phiếu mượn?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Xóa",
-                cancelButtonText: "Hủy"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "/admin/delete_borrow/" + _id,  // Cập nhật URL với route xóa
-                        type: "DELETE",  // Thay vì POST, sử dụng DELETE để xóa
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    position: "top-end",
-                                    icon: "success",
-                                    title: "Xóa thành công",
-                                    toast: true,
-                                    showConfirmButton: false,
-                                    timer: 1000
-                                });
-                                $('#row_' + _id).remove();  // Xóa dòng dữ liệu tương ứng
-                            } else {
-                                toastr.error('Xóa không thành công');
-                            }
-                        },
-                        error: function() {
-                            toastr.error('Có lỗi xảy ra. Vui lòng thử lại!');
+ $(document).ready(function() {
+    $('body').on('click', '.btn-delete-borrow', function() {
+        let _id = $(this).data("id");
+        Swal.fire({
+            title: "Cập nhật trạng thái phiếu mượn?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Xác nhận",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/admin/delete_borrow/" + _id, // URL phù hợp với route
+                    type: "DELETE", // Gửi yêu cầu DELETE
+                    data: {
+                        _token: '{{ csrf_token() }}', // Token bảo mật
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: response.message,
+                                toast: true,
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                            $('#row_' + _id).find('td').eq(2).html('<span class="badge bg-warning">Đã hủy</span>'); // Cập nhật giao diện
+                        } else {
+                            toastr.error(response.message);
                         }
-                    });
-                }
-            });
+                    },
+                    error: function() {
+                        toastr.error('Có lỗi xảy ra. Vui lòng thử lại!');
+                    }
+                });
+            }
         });
     });
+});
+
+
 </script>
 
 

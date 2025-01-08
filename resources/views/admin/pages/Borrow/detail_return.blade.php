@@ -3,7 +3,7 @@
 
 <!-- START PAGE CONTENT-->
 <div class="page-heading">
-    <h1 class="page-title">Phiếu mượn</h1>
+    <h1 class="page-title">chi tiết phiếu mượn</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -64,7 +64,14 @@
                     <td>
                         <a class="btn btn-default btn-xs m-r-5" title="Xem chi tiết">
                             <i class="fa fa-eye font-14"></i></a>
-
+                            <td>
+                                <select class="form-control" data-id="{{ $bor->book->Id }}" onchange="updateBookStatus(this)">
+                                    <option value="nguyen_vien" {{ $bor->Status == 'nguyen_vien' ? 'selected' : '' }}>Nguyên vẹn</option>
+                                    <option value="hu_hai" {{ $bor->Status == 'hu_hai' ? 'selected' : '' }}>Hư hại</option>
+                                    <option value="tot" {{ $bor->Status == 'tot' ? 'selected' : '' }}>Tốt</option>
+                                </select>
+                            </td>
+                            
                     </td>
                 </tr>
                 @endforeach
@@ -79,7 +86,6 @@
                 </tr>
             </thead>
             <tbody>
-               
                 <tr class="text-right">
                     <td class="font-bold font-18">Ngày mượn:</td>
                     <td class="font-bold font-18">{{ \Carbon\Carbon::now()->format('d/m/Y') }}</td> <!-- Hiển thị ngày hiện tại -->
@@ -88,7 +94,6 @@
                     <td class="font-bold font-18">Ngày trả:</td>
                     <td class="font-bold font-18">{{ \Carbon\Carbon::now()->addMonth()->format('d/m/Y') }}</td> <!-- Thay thế bằng biến chứa ngày trả -->
                 </tr>
-
             </tbody>
         </table>
         <div class="text-right">
@@ -96,7 +101,7 @@
                 <i></i> Quay lại
             </button>
             <a class="btn btn-success btn-add-borrow" data-id="{{ $br_ok->Id }}" title="Xác nhận phiếu ">
-                                <span >Xác nhận phiếu</span></a>
+                                <span >trả sách</span></a>
         </div>
 
     </div>
@@ -146,7 +151,7 @@
                 if (result.isConfirmed) {
                     // Gửi AJAX request tới server để xác nhận phiếu mượn
                     $.ajax({
-                        url: "/admin/confirm.borrow/" + _id,  // Cập nhật URL trỏ đúng route
+                        url: "/admin/confirm.return/" + _id,  // Cập nhật URL trỏ đúng route
                         type: "POST",
                         data: {
                             _token: '{{ csrf_token() }}',  // CSRF token để bảo mật
